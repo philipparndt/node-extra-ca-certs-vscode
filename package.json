@@ -3,6 +3,7 @@
   "displayName": "Node Extra CA Certs VSCode",
   "description": "Make all NODE_EXTRA_CA_CERTS available to VS Code extensions",
   "version": "1.0.0",
+  "icon": "icons/icon.png", 
   "engines": {
     "vscode": "^1.77.0"
   },
@@ -15,7 +16,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/philipparndt/node-extra-ca-certs-vscode"
+    "url": "https://github.com/philipparndt/node-extra-ca-certs-vscode"
   },
   "bugs": {
     "url": "https://github.com/philipparndt/node-extra-ca-certs-vscode"
