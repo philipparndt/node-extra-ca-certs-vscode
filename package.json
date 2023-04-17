@@ -2,10 +2,10 @@
   "name": "node-extra-ca-certs-vscode",
   "displayName": "Node Extra CA Certs VSCode",
   "description": "Make all NODE_EXTRA_CA_CERTS available to VS Code extensions",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "icon": "icons/icon.png", 
   "engines": {
-    "vscode": "^1.77.0"
+    "vscode": "^1.76.0"
   },
   "publisher": "pharndt",
   "categories": [
@@ -37,7 +37,7 @@
     "@types/glob": "8.1.0",
     "@types/mocha": "10.0.1",
     "@types/node": "18.15.11",
-    "@types/vscode": "1.77.0",
+    "@types/vscode": "1.76.0",
     "@typescript-eslint/eslint-plugin": "5.58.0",
     "@typescript-eslint/parser": "5.58.0",
     "@vscode/test-electron": "2.3.0",
