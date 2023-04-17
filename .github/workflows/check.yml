@@ -1,0 +1,30 @@
+name: Check
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Node Setup
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - id: changelog
+        name: Check changelog
+        run: |
+          ./.github/workflows/checkChangeLog.sh
+          changes=$(./.github/workflows/getChanges.sh)
+          echo "Changes:"
+          echo $changes
+
+          delimiter="$(openssl rand -hex 8)"
+          echo "changes<<${delimiter}" >> "${GITHUB_OUTPUT}"
+          echo "$changes" >> "${GITHUB_OUTPUT}"
+          echo "${delimiter}" >> "${GITHUB_OUTPUT}"

@@ -1,0 +1,81 @@
+name: Build release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Node Setup
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - id: changelog
+        name: Check changelog
+        run: |
+          ./.github/workflows/checkChangeLog.sh
+          changes=$(./.github/workflows/getChanges.sh)
+          echo "Changes:"
+          echo $changes
+
+          delimiter="$(openssl rand -hex 8)"
+          echo "changes<<${delimiter}" >> "${GITHUB_OUTPUT}"
+          echo "$changes" >> "${GITHUB_OUTPUT}"
+          echo "${delimiter}" >> "${GITHUB_OUTPUT}"
+
+      - id: project-version
+        name: Get project version
+        run: |
+          version=$(./.github/workflows/getVersion.sh)
+          suffix=b${{ github.run_number }}
+          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "release=$version-$suffix" >> $GITHUB_OUTPUT
+
+      - name: Build ${{ steps.project-version.outputs.release }}
+        run: |
+          rm package-lock.json
+          npm install
+          npm run package
+
+      - name: Test
+        run: |
+          sudo apt-get install xvfb
+          xvfb-run --auto-servernum npm test
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{steps.project-version.outputs.release}}
+          release_name: ${{steps.project-version.outputs.release}}
+          body: |
+            Changes in this Release
+            ${{ steps.changelog.outputs.changes }}
+
+          draft: false
+          prerelease: true
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./vscode-markdown-table-${{steps.project-version.outputs.version}}.vsix
+          asset_name: vscode-markdown-table-${{steps.project-version.outputs.version}}.vsix
+          asset_content_type: application/vsix
+
+      - uses: philipparndt/vsce-action@master
+        with:
+          args: "publish -p $VSCE_TOKEN"
+        env:
+          VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
