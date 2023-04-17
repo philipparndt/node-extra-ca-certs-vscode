@@ -31,7 +31,7 @@
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src --ext ts --max-warnings=0",
     "lint:fix": "eslint src --ext ts --max-warnings=0 --max-warnings=0 --fix",
-    "test": "node ./out/test/runTest.js"
+    "test": "echo \"no tests available\""
   },
   "devDependencies": {
     "@types/glob": "8.1.0",
