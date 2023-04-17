@@ -21,6 +21,7 @@ jobs:
       run: |
         rm package-lock.json
         npm install
+        npm run compile
         npm run package
 
     - name: test
