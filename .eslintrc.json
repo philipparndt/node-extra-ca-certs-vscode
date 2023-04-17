@@ -1,24 +1,58 @@
 {
-    "root": true,
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "jest": true
+    },
+    "extends": [
+        "standard"
+    ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaVersion": 6,
+        "ecmaVersion": 13,
         "sourceType": "module"
     },
     "plugins": [
         "@typescript-eslint"
     ],
     "rules": {
-        "@typescript-eslint/naming-convention": "warn",
-        "@typescript-eslint/semi": "warn",
-        "curly": "warn",
+        "@typescript-eslint/no-require-imports": "warn",
+        "@typescript-eslint/no-unused-vars": "warn",
+        "brace-style": [
+            "warn",
+            "stroustrup"
+        ],
+        "curly": [
+            "error",
+            "all"
+        ],
         "eqeqeq": "warn",
+        "indent": [
+            "warn",
+            4
+        ],
         "no-throw-literal": "warn",
-        "semi": "off"
-    },
-    "ignorePatterns": [
-        "out",
-        "dist",
-        "**/*.d.ts"
-    ]
+        "no-unexpected-multiline": "error",
+        "no-unused-vars": "off",
+        "no-multiple-empty-lines": [
+            "warn",
+            {
+                "max": 1,
+                "maxBOF": 0,
+                "maxEOF": 0
+            }
+        ],
+        "eol-last": [
+            "warn",
+            "always"
+        ],
+        "quotes": [
+            "warn",
+            "double"
+        ],
+        "semi": [
+            "warn",
+            "never"
+        ]
+    }
 }

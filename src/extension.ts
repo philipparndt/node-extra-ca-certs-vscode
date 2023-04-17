@@ -1,35 +1,47 @@
-function initialize() {
-  if (!process.env.NODE_EXTRA_CA_CERTS) {
-    console.log('ENV "NODE_EXTRA_CA_CERTS" is undefined or empty. Skipping activation.');
-    return;
-  }
-  
-  const fs = require('fs');
-  const path = require('path');
-  const extraCerts = process.env.NODE_EXTRA_CA_CERTS.split(path.delimiter);
-  const certs = extraCerts.map((cert: string) => fs.readFileSync(cert).toString()).join('\n');
-  const splitPattern = /(?=-----BEGIN\sCERTIFICATE-----)/g;
+import { SecureContext, SecureContextOptions } from "tls"
 
-  const allTrusted = certs.split(splitPattern);
-  const tls = require('tls');
-  const origCreateSecureContext = tls.createSecureContext;
-  tls.createSecureContext = (options: any) => {
-    const ctx = origCreateSecureContext(options);
-    allTrusted.filter(duplicated).forEach((cert: string) => {
-      ctx.context.addCACert(cert.trim());
-    });
-    return ctx;
-  };
+const NODE_EXTRA_CA_CERTS = "NODE_EXTRA_CA_CERTS"
+
+const loadCerts = async (extraCertsEnv: string) => {
+    const fs = await import("fs")
+    const path = await import("path")
+    const extraCerts = extraCertsEnv.split(path.delimiter)
+    const certs = extraCerts.map((cert: string) => fs.readFileSync(cert).toString()).join("\n")
+    const splitPattern = /(?=-----BEGIN\sCERTIFICATE-----)/g
+    return new Set(certs
+        .split(splitPattern)
+        .map((cert: string) => cert.trim()))
 }
 
-function duplicated(cert: string, index: number, arr: string[]) {
-  return arr.indexOf(cert) === index;
+let originalContextProvider: (options?: SecureContextOptions | undefined) => SecureContext
+
+const initialize = async () => {
+    if (!process.env[NODE_EXTRA_CA_CERTS]) {
+        console.log(`ENV '${NODE_EXTRA_CA_CERTS}' is undefined or empty. Skipping activation.`)
+        return
+    }
+
+    const allTrusted = await loadCerts(process.env[NODE_EXTRA_CA_CERTS])
+    const tls = await import("tls")
+    originalContextProvider = tls.createSecureContext
+    tls.createSecureContext = (options: any) => {
+        const ctx = originalContextProvider(options)
+        for (const cert of allTrusted) {
+            ctx.context.addCACert(cert)
+        }
+        return ctx
+    }
 }
 
-initialize();
+const PLUGIN_NAME = "node-extra-ca-certs-vscode"
 
-export function activate() {
-  console.log('Activating "node-extra-ca-certs-vscode"');
+export async function activate () {
+    console.log(`Activating '${PLUGIN_NAME}'`)
+    await initialize()
 }
 
-export function deactivate() {}
+export async function deactivate () {
+    console.log(`Deactivating '${PLUGIN_NAME}'`)
+    const tls = await import("tls")
+    tls.createSecureContext = originalContextProvider
+}
