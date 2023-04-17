@@ -1,24 +1,25 @@
-# mac-ca-vs-code
+# node-extra-ca-certs-vscode
 
-Make all certificates in Keychain Access available to VS Code extensions
+Make the environment variabe NODE_EXTRA_CA_CERTS available to VS Code extensions.
 
 ## Feature
 
-This is just a very simple extensions that use some codes from [mac-ca](https://github.com/jfromaniello/mac-ca) and [win-ca](https://github.com/ukoloff/win-ca) packages.
+This extension will enable the environment variable `NODE_EXTRA_CA_CERTS` for all VS Code extensions. So that all extensions can use the certificates installed in the system.
+
 It replaces `tls.createSecureContext` function with a custom function that load all certs from Keychain Access to the tls context. So self-signed certificates installed in the Keychain can be available to all VS Code extensions.
 
 ## Installation
 
-Install from [here](https://marketplace.visualstudio.com/items?itemName=linhmtran168.mac-ca-vscode) or open VS Code,
+Install from [here](add link) or open VSCode,
 hit `Ctrl+Shift+X` (Extensions pane),
-search for `mac-ca-vscode` and press `Install`.
+search for `node-extra-ca-certs-vscode` and press `Install`.
 
 ## Caveats
 
 - After installing, a restart is required for the changes to take effect.
-- Only works in MacOS, for other OS, it will do nothing.
 
 ## Credits
 
 - [win-ca](https://github.com/ukoloff/win-ca)
 - [mac-ca](https://github.com/jfromaniello/mac-ca)
+- [mac-ca-vscode](https://github.com/linhmtran168/mac-ca-vscode)

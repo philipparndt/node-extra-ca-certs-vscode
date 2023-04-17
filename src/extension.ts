@@ -1,25 +1,21 @@
 function initialize() {
-  if (process.platform !== 'darwin') { 
+  if (!process.env.NODE_EXTRA_CA_CERTS) {
+    console.log('ENV "NODE_EXTRA_CA_CERTS" is undefined or empty. Skipping activation.');
     return;
   }
-
+  
+  const fs = require('fs');
+  const path = require('path');
+  const extraCerts = process.env.NODE_EXTRA_CA_CERTS.split(path.delimiter);
+  const certs = extraCerts.map((cert: string) => fs.readFileSync(cert).toString()).join('\n');
   const splitPattern = /(?=-----BEGIN\sCERTIFICATE-----)/g;
-  const systemRootCertsPath = '/System/Library/Keychains/SystemRootCertificates.keychain';
-  const args = ['find-certificate', '-a', '-p'];
 
-  const childProcess = require('child_process');
-  const allTrusted = childProcess.spawnSync('/usr/bin/security', args)
-    .stdout.toString().split(splitPattern);
-
-  const allRoot = childProcess.spawnSync('/usr/bin/security', args.concat(systemRootCertsPath))
-    .stdout.toString().split(splitPattern);
-  const all = allTrusted.concat(allRoot);
-
+  const allTrusted = certs.split(splitPattern);
   const tls = require('tls');
   const origCreateSecureContext = tls.createSecureContext;
   tls.createSecureContext = (options: any) => {
     const ctx = origCreateSecureContext(options);
-    all.filter(duplicated).forEach((cert: string) => {
+    allTrusted.filter(duplicated).forEach((cert: string) => {
       ctx.context.addCACert(cert.trim());
     });
     return ctx;
@@ -33,7 +29,7 @@ function duplicated(cert: string, index: number, arr: string[]) {
 initialize();
 
 export function activate() {
-  console.log('Congratulations, your extension "mac-ca-vscode" is now active!');
+  console.log('Activating "node-extra-ca-certs-vscode"');
 }
 
 export function deactivate() {}

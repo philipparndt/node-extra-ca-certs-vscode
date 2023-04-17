@@ -1,16 +1,12 @@
 {
-  "name": "mac-ca-vscode",
-  "displayName": "Mac CA VSCode",
+  "name": "node-extra-ca-certs-vscode",
+  "displayName": "Node Extra CA Certs VSCode",
   "description": "Make all certificates in Keychain Access available to VS Code extensions",
-  "version": "0.1.1",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.0.0"
   },
-  "publisher": "linhmtran168",
-  "author": {
-    "name": "Linh M. Tran",
-    "email": "linh.mtran168@live.com"
-  },
+  "publisher": "pharndt",
   "categories": [
     "Other"
   ],
@@ -19,10 +15,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/linhmtran168/mac-ca-vscode"
+    "url": "git+https://github.com/philipparndt/node-extra-ca-certs-vscode"
   },
   "bugs": {
-    "url": "https://github.com/linhmtran168/mac-ca-vscode"
+    "url": "https://github.com/philipparndt/node-extra-ca-certs-vscode"
   },
   "main": "./dist/extension.js",
   "scripts": {
