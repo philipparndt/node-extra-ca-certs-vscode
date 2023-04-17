@@ -16,7 +16,7 @@ The idea is that you might have done the setup already in case you are a NodeJS 
 
 ## Installation
 
-- Install from [here](add link) 
+- Install from [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=pharndt.node-extra-ca-certs-vscode) 
 - Or open VSCode, hit `Ctrl+Shift+X` (Extensions pane), search for `node-extra-ca-certs-vscode` and press `Install`.
 
 Set the environment variable `NODE_EXTRA_CA_CERTS` to the path of the file containing the certificates.
