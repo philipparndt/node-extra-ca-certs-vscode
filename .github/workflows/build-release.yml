@@ -49,20 +49,20 @@ jobs:
           sudo apt-get install xvfb
           xvfb-run --auto-servernum npm test
 
-      - name: Create Release
-        id: create_release
-        uses: ncipollo/release-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag: ${{steps.project-version.outputs.release}}
-          name: ${{steps.project-version.outputs.release}}
-          body: |
-            Changes in this Release
-            ${{ steps.changelog.outputs.changes }}
-          artifacts: "*.vsix"
-          draft: false
-          prerelease: true
+#      - name: Create Release
+#        id: create_release
+#       uses: ncipollo/release-action@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          tag: ${{steps.project-version.outputs.release}}
+#          name: ${{steps.project-version.outputs.release}}
+#          body: |
+#            Changes in this Release
+#            ${{ steps.changelog.outputs.changes }}
+#          artifacts: "*.vsix"
+#          draft: false
+#          prerelease: true
 
       - uses: philipparndt/vsce-action@master
         with:
