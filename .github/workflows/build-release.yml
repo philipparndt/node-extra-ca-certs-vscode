@@ -51,29 +51,18 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: ncipollo/release-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{steps.project-version.outputs.release}}
-          release_name: ${{steps.project-version.outputs.release}}
+          tag: ${{steps.project-version.outputs.release}}
+          name: ${{steps.project-version.outputs.release}}
           body: |
             Changes in this Release
             ${{ steps.changelog.outputs.changes }}
-
+          artifacts: "*.vsix"
           draft: false
           prerelease: true
-
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./node-extra-ca-certs-vscode-${{steps.project-version.outputs.version}}.vsix
-          asset_name: node-extra-ca-certs-vscode-${{steps.project-version.outputs.version}}.vsix
-          asset_content_type: application/vsix
 
       - uses: philipparndt/vsce-action@master
         with:
